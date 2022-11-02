@@ -1,5 +1,6 @@
 <template>
-  <h1>Title</h1>
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
   <p>Hello world</p>
   <SubComponentX/>
 </template>
@@ -9,13 +10,22 @@ import SubComponentX from "./SubComponentX.vue";
 
 export default {
   name: "Example",
-  components: {SubComponentX},
+  components: {
+    SubComponentX
+  },
+  mounted() {
+    console.log("Component mounted.");
+  }
 };
 </script>
 
-<style>
+<style lang="less">
 h1 {
   color: red;
+}
+
+h2 {
+  color: magenta;
 }
 
 p {

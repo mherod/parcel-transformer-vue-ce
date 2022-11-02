@@ -23,5 +23,12 @@
   "dependencies": {
     "@parcel/runtime-js": "^2.7.0",
     "vue": "^3.2.41"
+  },
+  "targets": {
+    "main": {
+      "context": "browser",
+      "includeNodeModules": true,
+      "optimize": true
+    }
   }
 }
