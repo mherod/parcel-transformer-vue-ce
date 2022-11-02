@@ -87,11 +87,12 @@
 
 "@mherod/parcel-transformer-vue-ce@file:..":
   "resolved" "file:.."
-  "version" "0.0.1-alpha.2"
+  "version" "0.0.1-alpha.9"
   dependencies:
     "@parcel/plugin" "^2.7.0"
     "@parcel/utils" "^2.7.0"
     "isbinaryfile" "^5.0.0"
+    "less" "^4.1.3"
     "lodash" "^4.17.21"
     "mime-types" "^2.1.35"
 
