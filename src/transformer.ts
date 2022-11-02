@@ -10,8 +10,9 @@ function trimSource(code: string) {
 }
 
 async function extractStyles(fileSystem, filePath: string) {
-    const fileSource = await fileSystem.readFile(filePath, 'utf8');
-    return Array.from(fileSource.matchAll(/<style[^>]*>([^<]+)<\/style>/ig)).flatMap((match) => match[1]).shift().trim();
+    const fileSource: string = await fileSystem.readFile(filePath, 'utf8');
+    let regExp = /<style[^>]*>([^<]+)<\/style>/ig;
+    return Array.from(fileSource.matchAll(regExp))?.flatMap((match) => match[1])?.shift()?.trim();
 }
 
 export default new Transformer({
