@@ -5,18 +5,23 @@
   "source": "src/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build",
-    "start": "parcel serve"
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "parcel build --no-cache",
+    "start": "parcel serve --no-cache"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@mherod/parcel-transformer-vue-ce": "file:..",
+    "@parcel/optimizer-terser": "^2.7.0",
     "@parcel/transformer-vue": "^2.7.0",
-    "parcel": "^2.7.0"
+    "parcel": "^2.7.0",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
+    "@parcel/runtime-js": "^2.7.0",
     "vue": "^3.2.41"
   }
 }

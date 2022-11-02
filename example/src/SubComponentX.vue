@@ -4,7 +4,10 @@
 
 <script lang="ts">
 export default {
-  name: 'SubComponentX'
+  name: 'SubComponentX',
+  mounted() {
+    console.log('SubComponentX mounted')
+  }
 }
 </script>
 
