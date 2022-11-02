@@ -2,7 +2,7 @@
   <h1>Heading 1</h1>
   <h2>Heading 2</h2>
   <p>Hello world</p>
-  <SubComponentX/>
+  <SubComponentX />
 </template>
 
 <script lang="ts">
@@ -20,6 +20,12 @@ export default {
 </script>
 
 <style lang="less">
+@import "fonts.less";
+
+* {
+  .font-heavy;
+}
+
 h1 {
   color: red;
 }

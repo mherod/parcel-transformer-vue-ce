@@ -1,6 +1,6 @@
 {
   "name": "@mherod/parcel-transformer-vue-ce",
-  "version": "0.0.1-alpha.14",
+  "version": "0.0.1-alpha.15",
   "description": "",
   "source": "src/transformer.ts",
   "main": "lib/transformer.js",
