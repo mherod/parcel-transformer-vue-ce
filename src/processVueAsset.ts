@@ -17,8 +17,9 @@ function modifyMounted(input, inject) {
 export async function processVueAsset(asset: MutableAsset) {
   const filePath = asset.filePath;
   const extractedStyles = await extractStyles(filePath);
-  if (extractedStyles) {
-    const { css } = await less.render(extractedStyles, { filename: filePath });
+  const extractedCss = extractedStyles.css;
+  if (extractedCss) {
+    const { css } = await less.render(extractedCss, { filename: filePath });
     const formattedCss = optimizeCss(css);
     const inject = makeJsToInjectCss(formattedCss);
     const code = await asset.getCode() ?? "";

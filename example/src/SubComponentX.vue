@@ -11,8 +11,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 p {
-  color: greenyellow;
+  color: greenyellow !important;
 }
 </style>
