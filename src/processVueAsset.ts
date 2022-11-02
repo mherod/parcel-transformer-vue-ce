@@ -16,14 +16,20 @@ function modifyMounted(input: string, inject: string): string {
   return formatJavascript(s);
 }
 
+async function renderLess(scopedLess, filePath: string) {
+  const { css } = await less.render(scopedLess, { filename: filePath });
+  return css;
+}
+
 export async function processVueAsset(asset: MutableAsset) {
   const filePath = asset.filePath;
   const extractedStyles = await extractStyles(filePath);
   const extractedCss = extractedStyles.css;
   if (extractedCss) {
     const assetId = asset.id;
-    const scopedCss = `:host { ${extractedCss} }`;
-    const { css } = await less.render(scopedCss, { filename: filePath });
+    const scoped = extractedStyles.attrs.split(" ").includes("scoped");
+    const lessContent = scoped ? `[data-asset-id='${assetId}'] { ${extractedCss} }` : extractedCss;
+    const css = await renderLess(lessContent, filePath);
     const formattedCss = optimizeCss(css);
     const inject = joinJsArray(
       readFileSync(__dirname + "/vueInjectJs.js", "utf8"),

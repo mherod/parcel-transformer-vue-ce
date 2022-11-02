@@ -6,7 +6,7 @@ export function makeJsToInjectCss(css) {
     setTimeout(() => {
       const rootElement = findRootElement(this.$el);
       const style = rootElement.querySelector("style") ?? document.createElement('style');
-      style.innerHTML += \`${css}\`;
+      style.innerHTML = \`${css}\` + style.innerHTML;
       rootElement?.appendChild(style);
     }, 0);
   `;

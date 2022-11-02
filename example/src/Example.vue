@@ -1,8 +1,10 @@
 <template>
-  <h1>Heading 1</h1>
-  <h2>Heading 2</h2>
-  <p>Hello world</p>
-  <SubComponentX />
+  <main>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <p>Hello world</p>
+    <SubComponentX />
+  </main>
 </template>
 
 <script lang="ts">
