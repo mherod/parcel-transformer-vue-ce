@@ -1,0 +1,14 @@
+{
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "*": [
+      "@mherod/parcel-transformer-vue-ce",
+      "..."
+    ]
+  },
+  "optimizers": {
+    "*": [
+      "..."
+    ]
+  }
+}
