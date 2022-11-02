@@ -1,11 +1,8 @@
-// noinspection JSFileReferences
-import { readFileSync } from "fs";
-import { optimizeJs } from "./optimizeJs";
+// noinspection JSFileReferences,JSUnusedGlobalSymbols
 
 export function makeJsToInjectCss(css) {
-  const vueInjectJs = readFileSync(__dirname + "/vueInjectJs.js");
   // language=JavaScript
-  const s = vueInjectJs + `
+  return `
     setTimeout(() => {
       const rootElement = findRootElement(this.$el);
       const style = rootElement.querySelector("style") ?? document.createElement('style');
@@ -13,5 +10,4 @@ export function makeJsToInjectCss(css) {
       rootElement?.appendChild(style);
     }, 0);
   `;
-  return optimizeJs(s);
 }

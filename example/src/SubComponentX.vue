@@ -1,5 +1,5 @@
 <template>
-  <p data-lol>Sub</p>
+  <p>Sub</p>
 </template>
 
 <script lang="ts">
@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style>
-p[data-lol] {
+p {
   color: greenyellow;
 }
 </style>

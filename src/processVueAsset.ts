@@ -4,12 +4,14 @@ import { optimizeCss } from "./optimizeCss";
 import { makeJsToInjectCss } from "./makeJsToInjectCss";
 import less from "less";
 import { formatJavascript } from "./formatJavascript";
+import { joinJsArray } from "./joinJsArray";
+import { readFileSync } from "fs";
 
-function modifyMounted(input, inject) {
+function modifyMounted(input: string, inject: string): string {
   const formattedInput = formatJavascript(input);
   // safer to format the input before we do anything with it
   const s = formattedInput.replace(/mounted\s*\(\)\s*{\s*([^}]+)\s*}/, (match, p1) => {
-    return `mounted() { ${p1} ${inject} }`;
+    return formatJavascript(`mounted() { ${joinJsArray(p1, inject)} }`);
   });
   return formatJavascript(s);
 }
@@ -19,9 +21,15 @@ export async function processVueAsset(asset: MutableAsset) {
   const extractedStyles = await extractStyles(filePath);
   const extractedCss = extractedStyles.css;
   if (extractedCss) {
-    const { css } = await less.render(extractedCss, { filename: filePath });
+    const assetId = asset.id;
+    const scopedCss = `:host { ${extractedCss} }`;
+    const { css } = await less.render(scopedCss, { filename: filePath });
     const formattedCss = optimizeCss(css);
-    const inject = makeJsToInjectCss(formattedCss);
+    const inject = joinJsArray(
+      readFileSync(__dirname + "/vueInjectJs.js", "utf8"),
+      makeJsToInjectCss(formattedCss),
+      `try { this.$el.setAttribute("data-asset-id", "${assetId}") } catch (e) { }`
+    );
     const code = await asset.getCode() ?? "";
     const edited = code.replace(
       /<script([^>]*)>([^<]+)<\/script>/ig,

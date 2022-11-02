@@ -1,20 +1,21 @@
 // noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 
 import { Transformer } from "@parcel/plugin";
-import { MutableAsset } from "@parcel/types";
+import { MutableAsset, Transformer as TransformerOpts } from "@parcel/types";
 import { processVueAsset } from "./processVueAsset";
 import { processCssAsset } from "./processCssAsset";
 
-export default new Transformer({
+type T = any;
+
+const opts: TransformerOpts<T> = {
   transform: async function({ asset }): Promise<MutableAsset[]> {
     const assets: MutableAsset[] = [asset];
-    const filePath = asset.filePath;
+    const { filePath, type } = asset;
     if (filePath.match(/\.vue$/)) {
-      // console.log("Transforming " + filePath);
-      if (asset.type === "css") {
+      if (type === "css") {
         await processCssAsset(asset, assets).catch(console.error);
       }
-      if (asset.type == "vue" || asset.type == "js") {
+      if (type == "vue" || type == "js") {
         await processVueAsset(asset).catch(console.error);
       }
     }
@@ -23,4 +24,6 @@ export default new Transformer({
     }
     return assets;
   }
-});
+};
+
+export default new Transformer<T>(opts);
