@@ -1,18 +1,17 @@
-// @ts-ignore
-import vueInjectJs from "bundle-text:./vueInjectJs.js";
+// noinspection JSFileReferences
+import { readFileSync } from "fs";
+import { optimizeJs } from "./optimizeJs";
 
 export function makeJsToInjectCss(css) {
+  const vueInjectJs = readFileSync(__dirname + "/vueInjectJs.js");
   // language=JavaScript
-  return vueInjectJs + `
-        setTimeout(() => {
-          const style = document.createElement('style');
-          style.innerHTML += \`${css}\`;
-          const thisElement = this.$el;
-          const parentElement = findRootElement(thisElement);
-          console.log('thisElement', thisElement);
-          if (parentElement) {
-            parentElement.appendChild(style);
-          }
-        }, 0);
-`.trim();
+  const s = vueInjectJs + `
+    setTimeout(() => {
+      const rootElement = findRootElement(this.$el);
+      const style = rootElement.querySelector("style") ?? document.createElement('style');
+      style.innerHTML += \`${css}\`;
+      rootElement?.appendChild(style);
+    }, 0);
+  `;
+  return optimizeJs(s);
 }

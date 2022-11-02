@@ -1,4 +1,4 @@
-import { mountComponent } from "./utils/mount-component";
-import StudyTogetherOffers from "./Example.vue";
-
-mountComponent(StudyTogetherOffers);
+import { defineCustomElement } from "vue/dist/vue.esm-bundler.js";
+import Example from "./Example.vue";
+customElements.define("example-component", defineCustomElement(Example));
+document.body.innerHTML = `<example-component></example-component>`;
