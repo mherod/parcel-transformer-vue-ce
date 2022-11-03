@@ -1,7 +1,10 @@
-import { trimSource } from "./trimSource";
-import { formatLess } from "./formatLess";
+import { formatLess } from "./formatting/formatLess";
+import less from "less";
 
-export function optimizeCss(input) {
-  return formatLess(input);
-  // return trimSource(formatLess(input).replace(/\n+/g, " "));
+export async function optimizeCss(input: string): Promise<string> {
+  let lessContent = formatLess(input);
+  const output = await less.render(lessContent, {
+    compress: true,
+  });
+  return output.css;
 }

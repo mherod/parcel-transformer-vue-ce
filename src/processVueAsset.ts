@@ -2,10 +2,11 @@ import { MutableAsset } from "@parcel/types";
 import { extractStyles } from "./extractStyles";
 import { optimizeCss } from "./optimizeCss";
 import { makeJsToInjectCss } from "./makeJsToInjectCss";
-import { formatJavascript } from "./formatJavascript";
+import { formatJavascript } from "./formatting/formatJavascript";
 import { joinJsArray } from "./joinJsArray";
-import { readFileSync } from "fs";
-import less from "less";
+import { formatHtml } from "./formatting/formatHtml";
+import { renderLess } from "./renderLess";
+import { readJavaScript } from "./readJavaScript";
 
 function modifyMounted(input: string, inject: string): string {
   const formattedInput = formatJavascript(input);
@@ -15,11 +16,6 @@ function modifyMounted(input: string, inject: string): string {
     return `mounted${fnSyntax} {${joinJsArray(inject, inner)}}`;
   });
   return formatJavascript(s);
-}
-
-async function renderLess(lessContent: string, filePath: string): Promise<string> {
-  const output = await less.render(lessContent, { filename: filePath });
-  return output?.css ?? "";
 }
 
 const processedComment = "// processed by parcel-transformer-vue-ce";
@@ -38,18 +34,18 @@ export async function processVueAsset(asset: MutableAsset) {
       const scoped = extractedStyles.attrs.split(" ").includes("scoped");
       const lessContent = scoped ? `[data-asset-id='${assetId}'] { ${extractedCss} }` : extractedCss;
       const css = await renderLess(lessContent, filePath);
-      const formattedCss = optimizeCss(css);
+      const formattedCss = await optimizeCss(css);
       const inject = joinJsArray(
         processedComment,
-        readFileSync(__dirname + "/vueInjectJs.js", "utf8"),
+        readJavaScript(__dirname + "/vueInjectJs.ts"),
         makeJsToInjectCss(formattedCss),
-        `try { this.$el.setAttribute("data-asset-id", "${assetId}") } catch (e) { }`
+        `try { thisElement(this).setAttribute("data-asset-id", "${assetId}") } catch (e) { console.error(e) }`
       );
       const edited = code.replace(
         /<script([^>]*)>([^<]+)<\/script>/ig,
         (match, scriptAttrs, inner) => {
           const scriptEdited = modifyMounted(inner, inject);
-          return `<script${scriptAttrs}>${scriptEdited}</script>`;
+          return formatHtml(`<script${scriptAttrs}>${formatJavascript(scriptEdited)}</script>`);
         });
       if (edited !== code) {
         asset.setCode(edited);

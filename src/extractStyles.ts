@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { formatLess } from "./formatLess";
+import { formatLess } from "./formatting/formatLess";
 
 export async function extractStyles(filePath: string): Promise<{
   attrs: string,

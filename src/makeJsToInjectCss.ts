@@ -1,6 +1,6 @@
 // noinspection JSFileReferences,JSUnusedGlobalSymbols
 
-export function makeJsToInjectCss(css) {
+export function makeJsToInjectCss(css: string): string {
   // language=JavaScript
   return `
     setTimeout(() => {

@@ -87,7 +87,7 @@
 
 "@mherod/parcel-transformer-vue-ce@file:..":
   "resolved" "file:.."
-  "version" "0.0.1-alpha.17"
+  "version" "0.0.1"
   dependencies:
     "@parcel/plugin" "^2.7.0"
     "@parcel/utils" "^2.7.0"
@@ -96,6 +96,7 @@
     "lodash" "^4.17.21"
     "mime-types" "^2.1.35"
     "prettier" "^2.7.1"
+    "typescript" "^4.8.4"
 
 "@mischnic/json-sourcemap@^0.1.0":
   "integrity" "sha512-dQb3QnfNqmQNYA4nFSN/uLaByIic58gOXq4Y4XqLOWmOrw73KmJPt/HLyG0wvn1bnR6mBKs/Uwvkh+Hns1T0XA=="
