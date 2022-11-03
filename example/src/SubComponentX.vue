@@ -1,14 +1,17 @@
+<!--suppress JSUnusedGlobalSymbols -->
 <template>
-  <p>Sub</p>
+  <div>
+    <p>Sub</p>
+  </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'SubComponentX',
-  mounted() {
-    console.log('SubComponentX mounted')
+  name: "SubComponentX",
+  mounted: function() {
+    console.log("SubComponentX mounted");
   }
-}
+};
 </script>
 
 <style scoped>
