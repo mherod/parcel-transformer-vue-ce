@@ -11,8 +11,8 @@ function modifyMounted(input: string, inject: string): string {
   const formattedInput = formatJavascript(input);
   // safer to format the input before we do anything with it
   //
-  const s = formattedInput.replace(/mounted((\s*\(\))|(\W*function\s*\(\)))\s*[{]\s*([^}]+)\s*[}]/g, (match, fnSyntax, fnSyntaxA, fnSyntaxB, inner) => {
-    return formatJavascript(`mounted${fnSyntax} { ${joinJsArray(inner, inject)} }`);
+  const s = formattedInput.replace(/mounted((\s*\(\))|(\W*function\s*\(\)))\s*[{]\s*([^}]+\s*)[}]/g, (match, fnSyntax, fnSyntaxA, fnSyntaxB, inner) => {
+    return `mounted${fnSyntax} {${joinJsArray(inject, inner)}}`;
   });
   return formatJavascript(s);
 }
