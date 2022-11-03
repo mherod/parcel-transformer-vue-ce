@@ -22,7 +22,13 @@ async function renderLess(lessContent: string, filePath: string): Promise<string
   return output?.css ?? "";
 }
 
+const processedComment = "// processed by parcel-transformer-vue-ce";
+
 export async function processVueAsset(asset: MutableAsset) {
+  const code = await asset.getCode() ?? "";
+  if (code.includes(processedComment)) {
+    return;
+  }
   const filePath = asset.filePath;
   const extractedStyles = await extractStyles(filePath);
   if (extractedStyles) {
@@ -34,11 +40,11 @@ export async function processVueAsset(asset: MutableAsset) {
       const css = await renderLess(lessContent, filePath);
       const formattedCss = optimizeCss(css);
       const inject = joinJsArray(
+        processedComment,
         readFileSync(__dirname + "/vueInjectJs.js", "utf8"),
         makeJsToInjectCss(formattedCss),
         `try { this.$el.setAttribute("data-asset-id", "${assetId}") } catch (e) { }`
       );
-      const code = await asset.getCode() ?? "";
       const edited = code.replace(
         /<script([^>]*)>([^<]+)<\/script>/ig,
         (match, scriptAttrs, inner) => {
@@ -56,5 +62,4 @@ export async function processVueAsset(asset: MutableAsset) {
       asset.invalidateOnFileChange(filePath);
     }
   }
-  return asset;
 }
