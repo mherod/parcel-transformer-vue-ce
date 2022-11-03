@@ -15,7 +15,7 @@ export default {
   components: {
     SubComponentX
   },
-  mounted() {
+  async mounted() {
     console.log("Component mounted.");
   }
 };

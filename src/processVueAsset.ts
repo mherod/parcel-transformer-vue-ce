@@ -7,18 +7,26 @@ import { joinJsArray } from "./joinJsArray";
 import { formatHtml } from "./formatting/formatHtml";
 import { renderLess } from "./renderLess";
 import { readJavaScript } from "./readJavaScript";
+import { makeJsToSetAssetIdAttribute } from "./makeJsToSetAssetIdAttribute";
 
 function modifyMounted(input: string, inject: string): string {
   const formattedInput = formatJavascript(input);
   // safer to format the input before we do anything with it
   //
-  const s = formattedInput.replace(/mounted((\s*\(\))|(\W*function\s*\(\)))\s*[{]\s*([^}]+\s*)[}]/g, (match, fnSyntax, fnSyntaxA, fnSyntaxB, inner) => {
-    return `mounted${fnSyntax} {${joinJsArray(inject, inner)}}`;
-  });
+  const s = formattedInput.replace(
+    /mounted((\s*\(\))|(\W*function\s*\(\)))\s*[{]\s*([^}]+\s*)[}]/g,
+    (
+      match: string,
+      fnSyntax: string,
+      fnSyntaxA: string,
+      fnSyntaxB: string,
+      inner: string
+    ) => `mounted${fnSyntax} {${joinJsArray(inject, inner)}}`);
   return formatJavascript(s);
 }
 
-const processedComment = "// processed by parcel-transformer-vue-ce";
+// language=JavaScript
+const processedComment = `/* processed by parcel-transformer-vue-ce */`;
 
 export async function processVueAsset(asset: MutableAsset) {
   const code = await asset.getCode() ?? "";
@@ -39,20 +47,22 @@ export async function processVueAsset(asset: MutableAsset) {
         processedComment,
         readJavaScript(__dirname + "/vueInjectJs.ts"),
         makeJsToInjectCss(formattedCss),
-        `try { thisElement(this).setAttribute("data-asset-id", "${assetId}") } catch (e) { console.error(e) }`
+        makeJsToSetAssetIdAttribute(assetId)
       );
-      const edited = code.replace(
+      let edited: string;
+      edited = code.replace(
         /<script([^>]*)>([^<]+)<\/script>/ig,
-        (match, scriptAttrs, inner) => {
+        (match: string, scriptAttrs: string, inner: string) => {
           const scriptEdited = modifyMounted(inner, inject);
-          return formatHtml(`<script${scriptAttrs}>${formatJavascript(scriptEdited)}</script>`);
+          return formatHtml(`<script${scriptAttrs}>${scriptEdited}</script>`);
         });
-      if (edited !== code) {
+      if (edited != code) {
         asset.setCode(edited);
       } else {
-        const codeEdited = modifyMounted(code, inject);
-        if (codeEdited !== code) {
-          asset.setCode(codeEdited);
+        edited = modifyMounted(code, inject);
+        // edited = await optimizeJs(edited);
+        if (edited != code) {
+          asset.setCode(edited);
         }
       }
       asset.invalidateOnFileChange(filePath);

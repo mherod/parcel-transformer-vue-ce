@@ -96,6 +96,7 @@
     "lodash" "^4.17.21"
     "mime-types" "^2.1.35"
     "prettier" "^2.7.1"
+    "terser" "^5.15.1"
     "typescript" "^4.8.4"
 
 "@mischnic/json-sourcemap@^0.1.0":

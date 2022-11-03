@@ -1,14 +1,13 @@
-import * as prettier from "prettier";
+import { prettierFormatUnsafe } from "./prettierFormatUnsafe";
 
 export function formatJavascript(s: string): string {
-  const lines = s.split("\n");
-  if (lines.length > 1) {
-    try {
-      return prettier.format(s, { parser: "babel" });
-    } catch (error) {
-      return s;
-    }
-  } else {
-    return s;
+  try {
+    return prettierFormatUnsafe(s, "typescript");
+  } catch (_) {
   }
+  try {
+    return prettierFormatUnsafe(s, "babel");
+  } catch (_) {
+  }
+  return s;
 }
